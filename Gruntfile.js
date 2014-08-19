@@ -116,12 +116,17 @@ module.exports = function (grunt) {
                     src: [
                         '.tmp',
                         '<%= yeoman.dist %>/*',
-                        '!<%= yeoman.dist %>/.git*'
-                    ]
+                        '!<%= yeoman.dist %>/.git*',
+                        '!<%= yeoman.dist %>/Procfile',
+                        '!<%= yeoman.dist %>/package.json',
+                        '!<%= yeoman.dist %>/web.js',
+                        '!<%= yeoman.dist %>/node_modules'
+                   ]
                 }]
             },
             server: '.tmp'
         },
+
         browser_sync: {
             dev: {
                 bsFiles: {
@@ -355,8 +360,25 @@ module.exports = function (grunt) {
             all: {
                 rjsConfig: '<%= yeoman.app %>/scripts/main.js'
             }
+        },
+        buildcontrol: {
+            options: {
+                dir: 'dist',
+                commit:true,
+                push:true,
+                message: 'Built %sourceName% from commit %sourceCommit% on branch %sourceBranch%'
+            },
+            heroku: {
+                options: {
+                    remote: 'git@heroku.com:okuyamayuko.git',
+                    branch: 'master'
+                }
+            }
         }
+
     });
+
+    grunt.registerTask('deploy', ['buildcontrol']);
 
     grunt.registerTask('server', function (target) {
         grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
